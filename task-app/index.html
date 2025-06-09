@@ -10,8 +10,19 @@
     <div class="container">
         <header>
             <h1>🎯 Task Rewards</h1>
-            <div class="emoji-counter">
-                <span class="emoji-count">0</span> emojis collected
+            <div class="user-stats">
+                <div class="level-info">
+                    <span class="level-display">Level <span class="level-number">1</span></span>
+                    <span class="xp-display"><span class="current-xp">0</span>/<span class="xp-to-next">50</span> XP</span>
+                </div>
+                <div class="xp-progress-container">
+                    <div class="xp-progress-bar">
+                        <div class="xp-progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="emoji-counter">
+                    <span class="emoji-count">0</span> emojis collected
+                </div>
             </div>
         </header>
 
@@ -19,6 +30,11 @@
             <section class="task-input-section">
                 <div class="add-task-form">
                     <input type="text" id="task-input" placeholder="Add a new task..." maxlength="100">
+                    <select id="difficulty-select" class="difficulty-select">
+                        <option value="simple">Simple (10 XP)</option>
+                        <option value="medium">Medium (15 XP)</option>
+                        <option value="hard">Hard (20 XP)</option>
+                    </select>
                     <button id="add-task-btn">Add Task</button>
                 </div>
             </section>
@@ -60,11 +76,20 @@
     <!-- Celebration Modal -->
     <div id="celebration-modal" class="modal celebration">
         <div class="modal-content">
-            <h3>Task Completed! 🎉</h3>
-            <div class="new-emoji-display">
-                <span id="new-emoji" class="new-emoji"></span>
+            <h3 id="celebration-title">Task Completed! 🎉</h3>
+            <div class="celebration-content">
+                <div class="xp-gained-display" id="xp-gained-display">
+                    <span class="xp-gained">+<span id="xp-amount">10</span> XP</span>
+                </div>
+                <div class="new-emoji-display">
+                    <span id="new-emoji" class="new-emoji"></span>
+                </div>
+                <div class="level-up-display" id="level-up-display" style="display: none;">
+                    <h4>🎊 LEVEL UP! 🎊</h4>
+                    <p>You reached Level <span id="new-level">2</span>!</p>
+                </div>
             </div>
-            <p>You unlocked a new emoji!</p>
+            <p id="celebration-message">You unlocked a new emoji!</p>
             <button id="close-celebration-btn">Awesome!</button>
         </div>
     </div>

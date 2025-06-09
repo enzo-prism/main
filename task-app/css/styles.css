@@ -33,6 +33,67 @@ header h1 {
     font-weight: 700;
 }
 
+/* User Stats Section */
+.user-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.level-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 1.1rem;
+}
+
+.level-display {
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+.level-number {
+    color: #ffeaa7;
+    font-size: 1.5rem;
+}
+
+.xp-display {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.current-xp {
+    font-weight: bold;
+    color: #ffeaa7;
+}
+
+.xp-progress-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+.xp-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.xp-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffeaa7, #fdcb6e);
+    border-radius: 4px;
+    transition: width 0.8s ease;
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
 .emoji-counter {
     font-size: 1.1rem;
     opacity: 0.9;
@@ -94,6 +155,22 @@ h2 {
     background: #5f3dc4;
 }
 
+/* Difficulty Selector */
+.difficulty-select {
+    padding: 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.difficulty-select:focus {
+    outline: none;
+    border-color: #6c5ce7;
+}
+
 .task-list {
     display: flex;
     flex-direction: column;
@@ -130,6 +207,37 @@ h2 {
     flex: 1;
     font-size: 1rem;
     color: #2d3436;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.task-title {
+    font-weight: 500;
+}
+
+.task-difficulty {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    width: fit-content;
+    font-weight: 600;
+}
+
+.difficulty-simple {
+    background: #d1f2eb;
+    color: #00b894;
+}
+
+.difficulty-medium {
+    background: #fff3cd;
+    color: #f39c12;
+}
+
+.difficulty-hard {
+    background: #f8d7da;
+    color: #e74c3c;
 }
 
 .task-item.completed .task-content {
@@ -316,6 +424,56 @@ h2 {
     background: #5f3dc4;
 }
 
+/* Level Up and XP Celebration Styles */
+.celebration-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.xp-gained-display {
+    background: linear-gradient(45deg, #00b894, #55a3ff);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    animation: pulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
+}
+
+.level-up-display {
+    background: linear-gradient(45deg, #fd79a8, #fdcb6e);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    animation: levelUpBounce 0.8s ease;
+}
+
+@keyframes levelUpBounce {
+    0%, 20%, 60%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    80% {
+        transform: translateY(-10px);
+    }
+}
+
+.level-up-display h4 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
 @media (max-width: 600px) {
     .container {
         margin: 10px;
@@ -328,6 +486,12 @@ h2 {
     
     .add-task-form {
         flex-direction: column;
+    }
+    
+    .level-info {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
     }
     
     .task-actions {

@@ -1,10 +1,12 @@
 import TaskManager from './modules/taskManager.js';
 import EmojiManager from './modules/emojiManager.js';
+import LevelManager from './modules/levelManager.js';
 
 class TaskApp {
     constructor() {
         this.taskManager = new TaskManager();
         this.emojiManager = new EmojiManager();
+        this.levelManager = new LevelManager();
         this.currentEditingTaskId = null;
         
         this.initializeElements();
@@ -14,6 +16,7 @@ class TaskApp {
 
     initializeElements() {
         this.taskInput = document.getElementById('task-input');
+        this.difficultySelect = document.getElementById('difficulty-select');
         this.addTaskBtn = document.getElementById('add-task-btn');
         this.taskList = document.getElementById('task-list');
         this.emptyState = document.getElementById('empty-state');
@@ -21,12 +24,24 @@ class TaskApp {
         this.emojiEmptyState = document.getElementById('emoji-empty-state');
         this.emojiCount = document.querySelector('.emoji-count');
         
+        // Level UI elements
+        this.levelNumber = document.querySelector('.level-number');
+        this.currentXP = document.querySelector('.current-xp');
+        this.xpToNext = document.querySelector('.xp-to-next');
+        this.xpProgressFill = document.querySelector('.xp-progress-fill');
+        
         this.editModal = document.getElementById('edit-modal');
         this.editTaskInput = document.getElementById('edit-task-input');
         this.saveEditBtn = document.getElementById('save-edit-btn');
         this.cancelEditBtn = document.getElementById('cancel-edit-btn');
         
         this.celebrationModal = document.getElementById('celebration-modal');
+        this.celebrationTitle = document.getElementById('celebration-title');
+        this.celebrationMessage = document.getElementById('celebration-message');
+        this.xpGainedDisplay = document.getElementById('xp-gained-display');
+        this.xpAmount = document.getElementById('xp-amount');
+        this.levelUpDisplay = document.getElementById('level-up-display');
+        this.newLevelSpan = document.getElementById('new-level');
         this.newEmojiDisplay = document.getElementById('new-emoji');
         this.closeCelebrationBtn = document.getElementById('close-celebration-btn');
     }
@@ -57,11 +72,13 @@ class TaskApp {
 
     addTask() {
         const title = this.taskInput.value.trim();
+        const difficulty = this.difficultySelect.value;
         if (!title) return;
 
         try {
-            this.taskManager.createTask(title);
+            this.taskManager.createTask(title, '', difficulty);
             this.taskInput.value = '';
+            this.difficultySelect.value = 'simple';
             this.render();
         } catch (error) {
             console.error('Error adding task:', error);
@@ -111,11 +128,21 @@ class TaskApp {
 
     toggleTask(id) {
         try {
-            const task = this.taskManager.toggleTask(id);
+            const task = this.taskManager.getTaskById(id);
+            if (!task) return;
             
-            if (task.completed) {
+            const wasCompleted = task.completed;
+            
+            if (!wasCompleted) {
+                // Task is being completed
+                const levelResult = this.levelManager.addXP(task.difficulty);
+                const updatedTask = this.taskManager.toggleTask(id, levelResult.xpGained, 1);
                 const newEmoji = this.emojiManager.unlockRandomEmoji();
-                this.showCelebration(newEmoji.emoji);
+                
+                this.showCelebration(newEmoji.emoji, levelResult);
+            } else {
+                // Task is being uncompleted
+                this.taskManager.toggleTask(id);
             }
             
             this.render();
@@ -137,8 +164,21 @@ class TaskApp {
         this.editTaskInput.value = '';
     }
 
-    showCelebration(emoji) {
+    showCelebration(emoji, levelResult) {
         this.newEmojiDisplay.textContent = emoji;
+        this.xpAmount.textContent = levelResult.xpGained;
+        
+        if (levelResult.leveledUp) {
+            this.celebrationTitle.textContent = 'Level Up! 🎊';
+            this.celebrationMessage.textContent = `You reached Level ${levelResult.newLevel} and unlocked a new emoji!`;
+            this.levelUpDisplay.style.display = 'block';
+            this.newLevelSpan.textContent = levelResult.newLevel;
+        } else {
+            this.celebrationTitle.textContent = 'Task Completed! 🎉';
+            this.celebrationMessage.textContent = 'You unlocked a new emoji!';
+            this.levelUpDisplay.style.display = 'none';
+        }
+        
         this.celebrationModal.classList.add('show');
     }
 
@@ -166,7 +206,12 @@ class TaskApp {
                     ${task.completed ? 'checked' : ''}
                     onchange="app.toggleTask(${task.id})"
                 >
-                <div class="task-content">${this.escapeHtml(task.title)}</div>
+                <div class="task-content">
+                    <div class="task-title">${this.escapeHtml(task.title)}</div>
+                    <div class="task-difficulty difficulty-${task.difficulty || 'simple'}">
+                        ${this.getDifficultyText(task.difficulty || 'simple')}
+                    </div>
+                </div>
                 <div class="task-actions">
                     <button class="edit-btn" onclick="app.editTask(${task.id})">Edit</button>
                     <button class="delete-btn" onclick="app.deleteTask(${task.id})">Delete</button>
@@ -199,9 +244,28 @@ class TaskApp {
             `).join('');
     }
 
+    renderLevelInfo() {
+        const stats = this.levelManager.getStats();
+        
+        this.levelNumber.textContent = stats.level;
+        this.currentXP.textContent = stats.currentXP;
+        this.xpToNext.textContent = stats.xpToNextLevel;
+        this.xpProgressFill.style.width = `${stats.progress.percentage}%`;
+    }
+
     render() {
         this.renderTasks();
         this.renderEmojis();
+        this.renderLevelInfo();
+    }
+
+    getDifficultyText(difficulty) {
+        const difficultyMap = {
+            simple: 'Simple',
+            medium: 'Medium', 
+            hard: 'Hard'
+        };
+        return difficultyMap[difficulty] || 'Simple';
     }
 
     escapeHtml(text) {

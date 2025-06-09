@@ -1,6 +1,7 @@
 class Storage {
     static TASKS_KEY = 'task-app-tasks';
     static EMOJIS_KEY = 'task-app-emojis';
+    static LEVEL_KEY = 'task-app-level';
 
     static getTasks() {
         try {
@@ -38,10 +39,29 @@ class Storage {
         }
     }
 
+    static getLevelData() {
+        try {
+            const levelData = localStorage.getItem(this.LEVEL_KEY);
+            return levelData ? JSON.parse(levelData) : {};
+        } catch (error) {
+            console.error('Error loading level data:', error);
+            return {};
+        }
+    }
+
+    static saveLevelData(levelData) {
+        try {
+            localStorage.setItem(this.LEVEL_KEY, JSON.stringify(levelData));
+        } catch (error) {
+            console.error('Error saving level data:', error);
+        }
+    }
+
     static clearAll() {
         try {
             localStorage.removeItem(this.TASKS_KEY);
             localStorage.removeItem(this.EMOJIS_KEY);
+            localStorage.removeItem(this.LEVEL_KEY);
         } catch (error) {
             console.error('Error clearing storage:', error);
         }
