@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Emoji Rewards</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Task Rewards</h1>
+            <div class="emoji-counter">
+                <span class="emoji-count">0</span> emojis collected
+            </div>
+        </header>
+
+        <main>
+            <section class="task-input-section">
+                <div class="add-task-form">
+                    <input type="text" id="task-input" placeholder="Add a new task..." maxlength="100">
+                    <button id="add-task-btn">Add Task</button>
+                </div>
+            </section>
+
+            <section class="tasks-section">
+                <h2>Tasks</h2>
+                <div id="task-list" class="task-list">
+                    <!-- Tasks will be dynamically added here -->
+                </div>
+                <div id="empty-state" class="empty-state">
+                    <p>No tasks yet! Add one above to get started.</p>
+                </div>
+            </section>
+
+            <section class="emoji-collection-section">
+                <h2>Emoji Collection</h2>
+                <div id="emoji-collection" class="emoji-collection">
+                    <!-- Collected emojis will be displayed here -->
+                </div>
+                <div id="emoji-empty-state" class="empty-state">
+                    <p>Complete tasks to unlock emojis! 🎉</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <h3>Edit Task</h3>
+            <input type="text" id="edit-task-input" maxlength="100">
+            <div class="modal-actions">
+                <button id="save-edit-btn">Save</button>
+                <button id="cancel-edit-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration Modal -->
+    <div id="celebration-modal" class="modal celebration">
+        <div class="modal-content">
+            <h3>Task Completed! 🎉</h3>
+            <div class="new-emoji-display">
+                <span id="new-emoji" class="new-emoji"></span>
+            </div>
+            <p>You unlocked a new emoji!</p>
+            <button id="close-celebration-btn">Awesome!</button>
+        </div>
+    </div>
+
+    <script src="js/app-standalone.js"></script>
+</body>
+</html>
